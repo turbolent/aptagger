@@ -11,6 +11,17 @@ as described in ["A good POS tagger in about 200 lines of Python"]
 
 ## Usage
 
+### API
+
+```java
+Path modelPath = Paths.get("<path-to-model>");
+Tagger tagger = Tagger.loadFrom(modelPath);
+List<String> words = Arrays.asList("Simple", "is", "better", "than", "complex");
+List<String> tags = tagger.tag(words);
+```
+
+### Command Line
+
     $ mvn compile assembly:single
     $ java -jar target/aptagger.jar
 	Usage:
