@@ -2,6 +2,7 @@ package com.turbolent.aptagger;
 
 import org.msgpack.MessagePack;
 import org.msgpack.packer.Packer;
+import org.msgpack.template.SetTemplate;
 import org.msgpack.unpacker.Unpacker;
 
 import java.io.File;
@@ -55,8 +56,8 @@ public class Tagger {
                 unpacker.read(tMap(TString, TString));
             Map<String, Map<String, Float>> weights =
                 unpacker.read(tMap(TString, tMap(TString, TFloat)));
-            Set<String> labels = new HashSet<>();
-            labels.addAll(unpacker.read(tList(TString)));
+            Set<String> labels =
+                unpacker.read(new SetTemplate<>(TString));
 
             return new Tagger(weights, tags, labels);
         }
