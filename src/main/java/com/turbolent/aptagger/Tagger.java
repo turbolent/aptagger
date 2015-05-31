@@ -3,6 +3,7 @@ package com.turbolent.aptagger;
 import org.msgpack.MessagePack;
 import org.msgpack.packer.Packer;
 import org.msgpack.template.SetTemplate;
+import org.msgpack.template.Template;
 import org.msgpack.unpacker.Unpacker;
 
 import java.io.File;
@@ -21,6 +22,12 @@ public class Tagger {
     protected static final String[] START = {"-START-", "-START2-"};
     protected static final String[] END = {"-END-", "-END2-"};
     protected static final Pattern NUMBER = Pattern.compile("[0-9][0-9,.]*");
+    protected static final Template<Map<String, String>> TAGS_TEMPLATE =
+        tMap(TString, TString);
+    protected static final Template<Map<String, Map<String, Float>>> WEIGHTS_TEMPLATE =
+        tMap(TString, tMap(TString, TFloat));
+    protected static final Template<Set<String>> LABELS_TEMPLATE =
+        new SetTemplate<>(TString);
 
     private static boolean isNumber(String string) {
         return NUMBER.matcher(string).matches();
@@ -52,12 +59,9 @@ public class Tagger {
         try (FileInputStream fileStream = new FileInputStream(inputFile);
              Unpacker unpacker = new MessagePack().createUnpacker(fileStream))
         {
-            Map<String, String> tags =
-                unpacker.read(tMap(TString, TString));
-            Map<String, Map<String, Float>> weights =
-                unpacker.read(tMap(TString, tMap(TString, TFloat)));
-            Set<String> labels =
-                unpacker.read(new SetTemplate<>(TString));
+            Map<String, String> tags = unpacker.read(TAGS_TEMPLATE);
+            Map<String, Map<String, Float>> weights = unpacker.read(WEIGHTS_TEMPLATE);
+            Set<String> labels = unpacker.read(LABELS_TEMPLATE);
 
             return new Tagger(weights, tags, labels);
         }
