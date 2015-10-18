@@ -11,10 +11,11 @@ if [ "$TRAVIS_PULL_REQUEST" == "false" ]; then
   git clone https://$GH_TOKEN:x-oauth-basic@github.com/turbolent/mvn-repo.git $REPO_DIR
 
   echo -e "Running maven deploy ...\n"
-  mvn deploy -DrepositoryPath=$REPO_DIR
+  mvn deploy -DrepositoryPath=$REPO_DIR -DskipTests
 
   echo -e "Committing and pushing ...\n"
   cd $REPO_DIR
+  git add -A
   git commit -a -m "update $PROJECT_NAME"
   git push
 
