@@ -7,7 +7,7 @@ if [ "$TRAVIS_PULL_REQUEST" == "false" ]; then
   git config --global push.default simple
 
   echo -e "Cloning maven repo ...\n"
-  export REPO_DIR=$(mktemp -d -t mvn-repo)
+  export REPO_DIR=$(mktemp -d 2>/dev/null || mktemp -d -t mvn-repo)
   git clone https://$GH_TOKEN:x-oauth-basic@github.com/turbolent/mvn-repo.git $REPO_DIR
 
   echo -e "Running maven deploy ...\n"
